@@ -9,7 +9,7 @@ You should be able to add new functionality without changing existing code. This
 
 This example demonstrates a payment processing system that supports multiple payment methods (credit cards, PayPal, Stripe, bank transfers, cryptocurrency).
 
-### Before (Violation) ?
+### Before (Violation)
 
 The `PaymentProcessor` class uses a **switch statement** to handle different payment methods:
 
@@ -31,7 +31,7 @@ switch (request.Method)
 - **Testing Difficulty**: Can't test payment methods independently
 - **Violation of OCP**: The class is not closed for modification
 
-### After (Following OCP) ?
+### After (Following OCP)
 
 Uses the **Strategy Pattern** with an `IPaymentProcessor` interface:
 
@@ -76,3 +76,4 @@ The program demonstrates how easily a new cryptocurrency payment processor is ad
 Use **abstraction** (interfaces) and **composition** (dependency injection) to make your code extensible. When you need new functionality, add new classes instead of modifying existing ones.
 
 **"Open for extension, closed for modification"** = Add new code, don't change old code.
+
