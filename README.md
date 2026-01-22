@@ -562,7 +562,7 @@ This principle is the cornerstone of **Inversion of Control (IoC)** and **Depend
 1. **Clone the repository:**
    ```bash
    git clone https://github.com/andreavallati/SolidPrinciples.git
-   cd DesignPatterns
+   cd SolidPrinciples
    ```
 
 2. **Restore dependencies:**
