@@ -194,7 +194,7 @@ When you find yourself saying "and" when describing what a class does, it probab
 - ❌ "This class validates **and** calculates **and** saves **and** sends emails"
 - ✅ "This class validates" (single responsibility)
 
-[📄 Full documentation →](SRP.InvoiceProcessor/README.md)
+[SRP Full Documentation](SolidPrinciples/SRP.InvoiceProcessor/README.md)
 
 ---
 
@@ -269,7 +269,7 @@ Use **abstraction** (interfaces) and **composition** (dependency injection) to m
 
 **"Open for extension, closed for modification"** = Add new code, don't change old code.
 
-[📄 Full documentation →](OCP.PaymentGateway/README.md)
+[OCP Full Documentation →](SolidPrinciples/OCP.PaymentGateway/README.md)
 
 ---
 
@@ -342,7 +342,7 @@ storage.ReadFile("file.txt"); // Works perfectly!
 
 The LSP ensures that inheritance hierarchies are logically sound and that polymorphism works correctly.
 
-[📄 Full documentation →](LSP.FileStorage/README.md)
+[LSP Full Documentation →](SolidPrinciples/LSP.FileStorage/README.md)
 
 ---
 
@@ -432,7 +432,7 @@ Instead of creating one large interface with everything, create multiple small i
 
 ISP promotes loose coupling, high cohesion, and better API design.
 
-[📄 Full documentation →](ISP.OfficeDevices/README.md)
+[ISP Full Documentation →](SolidPrinciples/ISP.OfficeDevices/README.md)
 
 ---
 
@@ -540,7 +540,7 @@ var service3 = new OrderService(new SqlOrderRepository(), new PushNotificationSe
 
 This principle is the cornerstone of **Inversion of Control (IoC)** and **Dependency Injection** patterns used throughout modern software development.
 
-[📄 Full documentation →](DIP.OrderManagement/README.md)
+[DIP Full Documentation →](SolidPrinciples/DIP.OrderManagement/README.md)
 
 ---
 
