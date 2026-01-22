@@ -14,6 +14,66 @@ An online retail system that processes customer orders from creation through shi
 - Send notifications and track shipments
 - Support different order capabilities (cancellation, refunds, modifications)
 
+---
+
+## System Architecture Diagram
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                      OrderFulfillmentService (Orchestrator)                  │
+│                              [DIP: Depends on Abstractions]                  │
+└────────────────────────────────┬────────────────────────────────────────────┘
+                                 │
+         ┌───────────────────────┼───────────────────────┐
+         │                       │                       │
+         ▼                       ▼                       ▼
+┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
+│  OrderValidator │    │OrderPricing     │    │ OrderHandler    │
+│      [SRP]      │    │  Calculator     │    │   Factory       │
+│                 │    │     [SRP]       │    │     [LSP]       │
+└─────────────────┘    └─────────────────┘    └────────┬────────┘
+                                                        │
+                                            ┌───────────┼───────────┐
+                                            ▼           ▼           ▼
+                                     ┌──────────┐ ┌──────────┐ ┌────────────┐
+                                     │Standard  │ │ Express  │ │International│
+                                     │ Handler  │ │ Handler  │ │  Handler   │
+                                     └──────────┘ └──────────┘ └────────────┘
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                         Extensible Strategies [OCP]                          │
+├─────────────────────────┬─────────────────────────┬─────────────────────────┤
+│   IDiscountStrategy     │   IShippingProvider     │   IPaymentProcessor     │
+│  ┌──────────────────┐   │  ┌──────────────────┐   │  ┌──────────────────┐   │
+│  │ VIPDiscount      │   │  │ StandardShipping │   │  │ CreditCard       │   │
+│  │ BulkDiscount     │   │  │ ExpressShipping  │   │  │ PayPal           │   │
+│  │ PercentDiscount  │   │  │ Intl.Shipping    │   │  │ (More...)        │   │
+│  │ (Add More...)    │   │  │ (Add More...)    │   │  │                  │   │
+│  └──────────────────┘   │  └──────────────────┘   │  └──────────────────┘   │
+└─────────────────────────┴─────────────────────────┴─────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                        Injected Dependencies [DIP]                           │
+├────────────────┬─────────────────┬──────────────────┬──────────────────────┤
+│IOrderRepository│ IInventoryService│INotificationServ.│     ILogger          │
+│  ┌──────────┐  │  ┌──────────┐   │  ┌──────────┐    │  ┌──────────┐        │
+│  │InMemory  │  │  │Inventory │   │  │  Email   │    │  │ Console  │        │
+│  │SqlRepo   │  │  │ Service  │   │  │   SMS    │    │  │  Logger  │        │
+│  │MongoRepo │  │  │          │   │  │          │    │  │          │        │
+│  └──────────┘  │  └──────────┘   │  └──────────┘    │  └──────────┘        │
+└────────────────┴─────────────────┴──────────────────┴──────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                      Order Capabilities [ISP]                                │
+├──────────────────┬──────────────────┬──────────────────┬───────────────────┤
+│ICancellableOrder │  ITrackableOrder │  IRefundableOrder│  IModifiableOrder │
+│  - Cancel()      │  - GetTracking() │  - RequestRefund()│  - UpdateAddress()│
+│  - CanCancel()   │  - GetStatus()   │  - CanRefund()   │  - CanModify()    │
+└──────────────────┴──────────────────┴──────────────────┴───────────────────┘
+```
+
+---
+
 ## How Each SOLID Principle is Applied
 
 ### **S** - Single Responsibility Principle (SRP)
@@ -74,7 +134,7 @@ handler.PrepareForShipment(order); // Works for ALL order types
 **Files:**
 - `LSP/OrderHandlers.cs`
 
-**Why it matters here:** You can process any order type through the same interface. The `OrderFulfillmentService` doesn't need to know which specific handler it's using�polymorphism just works.
+**Why it matters here:** You can process any order type through the same interface. The `OrderFulfillmentService` doesn't need to know which specific handler it's using—polymorphism just works.
 
 ---
 
@@ -157,6 +217,8 @@ var service2 = new OrderFulfillmentService(
 dotnet run --project SOLID.Combined
 ```
 
+---
+
 ### What You'll See
 
 The program demonstrates **3 complete order scenarios**:
@@ -180,6 +242,8 @@ The program demonstrates **3 complete order scenarios**:
    - Uses SMS notifications instead of Email (demonstrates DIP)
    - Shows ISP with tracking capabilities
 
+---
+
 ## The Power of Combined SOLID Principles
 
 ### Before SOLID (Typical Problems):
@@ -199,16 +263,13 @@ The program demonstrates **3 complete order scenarios**:
 ## Key Takeaways
 
 1. **SOLID principles work together** - They're not isolated rules, but a cohesive design philosophy
-
 2. **Real-world applicability** - This isn't academic theory; it's how production systems should be built
-
 3. **Maintainability** - Changes are isolated, reducing risk of breaking existing functionality
-
 4. **Testability** - Each component can be tested independently with mocks/stubs
-
 5. **Extensibility** - New features (payment methods, shipping providers, discounts) can be added without modifying existing code
-
 6. **Flexibility** - Swap implementations at runtime or configuration time
+
+---
 
 ## Extending This Example
 
@@ -263,3 +324,16 @@ public class GiftOrder : StandardOrder, IGiftWrappable
 ```
 
 **No modification of existing code required!** That's the power of SOLID.
+
+---
+
+## Real-World Impact
+
+| Requirement Change | Without SOLID | With SOLID (This Example) |
+|-------------------|---------------|---------------------------|
+| Add new payment method (Apple Pay) | Modify `OrderProcessor`, update switch statements, test everything | Create `ApplePayProcessor : IPaymentProcessor`, register it. **0 existing code changes**. |
+| Switch from Email to SMS | Search/replace through `OrderProcessor`, hope nothing breaks | Inject `SmsNotificationService` instead of `EmailNotificationService`. **1 line change**. |
+| Support drone delivery | Add case to shipping switch, modify calculation logic | Create `DroneShipping : IShippingProvider`. **0 existing code changes**. |
+| Add subscription orders | Add order type enum, add case statements everywhere | Create `SubscriptionOrderHandler : IOrderHandler`. **0 existing code changes**. |
+| Test payment without real gateway | Mock entire `OrderProcessor`, complex setup | Inject `MockPaymentProcessor`. **Clean unit test**. |
+| Support multiple databases (SQL, Mongo, Redis) | Rewrite `OrderProcessor` data access layer | Create implementations of `IOrderRepository`. **0 business logic changes**. |
