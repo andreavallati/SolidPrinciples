@@ -9,7 +9,7 @@ Each class should have a single, well-defined responsibility. When a class has m
 
 This example demonstrates invoice processing in an e-commerce or billing system.
 
-### Before (Violation) ?
+### Before (Violation)
 
 The `InvoiceProcessor` class has **four different responsibilities**:
 1. **Validation** - Checking if invoice data is valid
@@ -24,7 +24,7 @@ The `InvoiceProcessor` class has **four different responsibilities**:
 - Multiple developers working on different features will cause merge conflicts
 - High risk of introducing bugs when making any change
 
-### After (Following SRP) ?
+### After (Following SRP)
 
 Each responsibility is separated into its own class:
 - **`InvoiceValidator`** - Only validates invoice data
@@ -51,5 +51,6 @@ The program demonstrates both approaches and clearly shows the benefits of follo
 ## Key Takeaway
 
 When you find yourself saying "and" when describing what a class does, it probably violates SRP. 
-- ? "This class validates **and** calculates **and** saves **and** sends emails"
-- ? "This class validates" (single responsibility)
+- "This class validates **and** calculates **and** saves **and** sends emails"
+- "This class validates" (single responsibility)
+
