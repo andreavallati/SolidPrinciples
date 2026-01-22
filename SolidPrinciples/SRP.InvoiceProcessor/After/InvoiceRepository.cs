@@ -8,7 +8,7 @@ namespace SRP.InvoiceProcessor.After;
 /// </summary>
 public class InvoiceRepository
 {
-    public static void Save(Invoice invoice)
+    public void Save(Invoice invoice)
     {
         Console.WriteLine($"[DB] Connecting to database...");
         Console.WriteLine($"[DB] Executing: INSERT INTO Invoices VALUES ('{invoice.InvoiceNumber}', '{invoice.CustomerName}', {invoice.Subtotal}, {invoice.Tax}, {invoice.Total})");

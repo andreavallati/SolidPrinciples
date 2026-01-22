@@ -103,7 +103,7 @@ var afterProcessor = new SRP.InvoiceProcessor.After.InvoiceProcessor(
 
 try
 {
-    SRP.InvoiceProcessor.After.InvoiceProcessor.ProcessInvoice(afterInvoice);
+    afterProcessor.ProcessInvoice(afterInvoice);
     Console.WriteLine();
     Console.WriteLine($"Invoice processed. Subtotal: ${afterInvoice.Subtotal:F2}, Tax: ${afterInvoice.Tax:F2}, Total: ${afterInvoice.Total:F2}");
 }

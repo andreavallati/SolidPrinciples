@@ -42,7 +42,7 @@ var beforeOrder = new Order
 };
 
 var beforeService = new OrderService();
-OrderService.ProcessOrder(beforeOrder);
+beforeService.ProcessOrder(beforeOrder);
 
 Console.WriteLine("\nWhat if we want to:");
 Console.WriteLine("Switch from SQL Server to MongoDB?");

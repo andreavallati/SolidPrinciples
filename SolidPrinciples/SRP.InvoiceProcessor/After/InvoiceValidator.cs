@@ -8,7 +8,7 @@ namespace SRP.InvoiceProcessor.After;
 /// </summary>
 public class InvoiceValidator
 {
-    public static void Validate(Invoice invoice)
+    public void Validate(Invoice invoice)
     {
         ArgumentNullException.ThrowIfNull(invoice);
 

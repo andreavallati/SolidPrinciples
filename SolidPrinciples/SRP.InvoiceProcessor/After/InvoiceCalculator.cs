@@ -10,7 +10,7 @@ public class InvoiceCalculator
 {
     private const decimal TaxRate = 0.20m; // 20% VAT
 
-    public static void Calculate(Invoice invoice)
+    public void Calculate(Invoice invoice)
     {
         decimal subtotal = 0;
 

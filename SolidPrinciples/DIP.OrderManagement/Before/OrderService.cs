@@ -22,7 +22,7 @@ public class OrderItem
 /// </summary>
 public class SqlOrderRepository
 {
-    public static void Save(Order order)
+    public void Save(Order order)
     {
         Console.WriteLine($"[SQL DB] Connecting to SQL Server database...");
         Console.WriteLine($"[SQL DB] INSERT INTO Orders VALUES ('{order.OrderId}', '{order.CustomerName}', {order.TotalAmount})");
@@ -39,7 +39,7 @@ public class SqlOrderRepository
 /// </summary>
 public class EmailService
 {
-    public static void SendConfirmation(Order order)
+    public void SendConfirmation(Order order)
     {
         Console.WriteLine($"[EMAIL] Connecting to SMTP server...");
         Console.WriteLine($"[EMAIL] To: {order.CustomerEmail}");
@@ -68,7 +68,7 @@ public class OrderService
         _emailService = new EmailService();
     }
 
-    public static void ProcessOrder(Order order)
+    public void ProcessOrder(Order order)
     {
         Console.WriteLine($"\n[ORDER SERVICE] Processing order {order.OrderId}");
 
@@ -79,10 +79,10 @@ public class OrderService
         Console.WriteLine($"[ORDER SERVICE] Order total: ${order.TotalAmount:F2}");
 
         // Save to database - tied to SQL
-        SqlOrderRepository.Save(order);
+        _repository.Save(order);
 
         // Send confirmation - tied to Email
-        EmailService.SendConfirmation(order);
+        _emailService.SendConfirmation(order);
 
         Console.WriteLine($"[ORDER SERVICE] Order {order.OrderId} processed successfully");
     }

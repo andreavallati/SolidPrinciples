@@ -8,7 +8,7 @@ namespace SRP.InvoiceProcessor.After;
 /// </summary>
 public class InvoiceNotifier
 {
-    public static void SendNotification(Invoice invoice)
+    public void SendNotification(Invoice invoice)
     {
         Console.WriteLine($"[EMAIL] Connecting to SMTP server...");
         Console.WriteLine($"[EMAIL] To: {invoice.CustomerEmail}");

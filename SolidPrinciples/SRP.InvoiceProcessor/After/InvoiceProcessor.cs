@@ -26,11 +26,11 @@ public class InvoiceProcessor
         _notifier = notifier;
     }
 
-    public static void ProcessInvoice(Invoice invoice)
+    public void ProcessInvoice(Invoice invoice)
     {
-        InvoiceValidator.Validate(invoice);
-        InvoiceCalculator.Calculate(invoice);
-        InvoiceRepository.Save(invoice);
-        InvoiceNotifier.SendNotification(invoice);
+        _validator.Validate(invoice);
+        _calculator.Calculate(invoice);
+        _repository.Save(invoice);
+        _notifier.SendNotification(invoice);
     }
 }
