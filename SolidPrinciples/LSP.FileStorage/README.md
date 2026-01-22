@@ -9,7 +9,7 @@ Subtypes must be substitutable for their base types. If class B is a subtype of 
 
 This example demonstrates a file storage system that supports various storage backends (local file system, cloud storage, AWS S3, Azure Blob Storage).
 
-### Before (Violation) ?
+### Before (Violation)
 
 A base `FileStorage` class defines operations like `SaveFile`, `ReadFile`, `DeleteFile`, and `GetFileSize`.
 
@@ -28,10 +28,10 @@ A base `FileStorage` class defines operations like `SaveFile`, `ReadFile`, `Dele
 **Example:**
 ```csharp
 FileStorage storage = new ReadOnlyCloudStorage("path");
-storage.SaveFile("file.txt", data); // BOOM! NotSupportedException
+storage.SaveFile("file.txt", data); // NotSupportedException
 ```
 
-### After (Following LSP) ?
+### After (Following LSP)
 
 Uses **interface segregation** to define clear contracts:
 
@@ -74,3 +74,4 @@ The program demonstrates how violating LSP leads to runtime exceptions, and how 
 **Don't force derived classes to implement operations they can't support.** Use interface segregation to create precise contracts that all implementations can fulfill without throwing exceptions or changing expected behavior.
 
 The LSP ensures that inheritance hierarchies are logically sound and that polymorphism works correctly.
+
