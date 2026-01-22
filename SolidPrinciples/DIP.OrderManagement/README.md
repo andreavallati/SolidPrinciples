@@ -10,7 +10,7 @@ Instead of having high-level business logic depend on low-level implementation d
 
 This example demonstrates an e-commerce order processing system that saves orders to a database and sends confirmation notifications.
 
-### Before (Violation) ?
+### Before (Violation)
 
 The `OrderService` class directly creates and depends on concrete implementations:
 
@@ -40,7 +40,7 @@ public class OrderService
 2. Recompile
 3. Risk breaking existing functionality
 
-### After (Following DIP) ?
+### After (Following DIP)
 
 Both high-level and low-level modules depend on **abstractions** (interfaces):
 
@@ -109,3 +109,4 @@ DIP enables:
 - **Scalability** - Add features without modifying core logic
 
 This principle is the cornerstone of **Inversion of Control (IoC)** and **Dependency Injection** patterns used throughout modern software development.
+
