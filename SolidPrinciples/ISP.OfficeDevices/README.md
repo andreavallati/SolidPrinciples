@@ -9,7 +9,7 @@ Many specific interfaces are better than one general-purpose interface. Split la
 
 This example demonstrates an office device management system for printers, scanners, fax machines, and multifunction devices.
 
-### Before (Violation) ?
+### Before (Violation)
 
 A single `IMultiFunctionDevice` interface defines all possible operations:
 
@@ -37,7 +37,7 @@ public interface IMultiFunctionDevice
 - **Misleading API**: Interface promises functionality that implementations don't have
 - **Hard to Extend**: Adding new device types with different capabilities is awkward
 
-### After (Following ISP) ?
+### After (Following ISP)
 
 Uses **segregated interfaces** for each capability:
 
@@ -91,3 +91,4 @@ The program demonstrates how fat interfaces lead to exceptions, and how segregat
 Instead of creating one large interface with everything, create multiple small interfaces for specific needs. Classes implement only what they can actually do, and clients depend only on what they actually use.
 
 ISP promotes loose coupling, high cohesion, and better API design.
+
