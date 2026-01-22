@@ -140,6 +140,51 @@ DIP.OrderManagement/
 └── README.md                                   # Detailed documentation
 ```
 
+**SOLID.Combined**
+
+```
+SOLID.Combined/
+├── Models/
+│   └── OrderModels.cs                         # Domain models (Order, OrderItem, etc.)
+├── SRP/
+│   └── OrderValidatorAndCalculator.cs         # Separated responsibilities
+│       ├── OrderValidator                     # Single job: validation
+│       └── OrderPricingCalculator             # Single job: pricing
+├── OCP/
+│   └── ExtensibleStrategies.cs                # Extensible components
+│       ├── IDiscountStrategy                  # Discount abstractions
+│       │   ├── VIPCustomerDiscount            # VIP discount
+│       │   ├── BulkOrderDiscount              # Bulk discount
+│       │   └── PercentageDiscount             # Percentage discount
+│       ├── IShippingProvider                  # Shipping abstractions
+│       │   ├── StandardShipping               # Standard delivery
+│       │   ├── ExpressShipping                # Fast delivery
+│       │   └── InternationalShipping          # International delivery
+│       └── IPaymentProcessor                  # Payment abstractions
+│           ├── CreditCardPayment              # Credit card
+│           └── PayPalPayment                  # PayPal
+├── LSP/
+│   └── OrderHandlers.cs                       # Substitutable handlers
+│       ├── StandardOrderHandler               # Standard processing
+│       ├── ExpressOrderHandler                # Express processing
+│       └── InternationalOrderHandler          # International processing
+├── ISP/
+│   └── OrderCapabilities.cs                   # Segregated interfaces
+│       ├── ICancellableOrder                  # Cancellation capability
+│       ├── ITrackableOrder                    # Tracking capability
+│       ├── IRefundableOrder                   # Refund capability
+│       └── IModifiableOrder                   # Modification capability
+├── DIP/
+│   └── Abstractions.cs                        # Dependency abstractions
+│       ├── IOrderRepository                   # Data persistence
+│       ├── IInventoryService                  # Stock management
+│       ├── INotificationService               # Notifications
+│       └── ILogger                            # Logging
+├── OrderFulfillmentService.cs                 # Main orchestrator (ALL principles)
+├── Program.cs                                 # 3 complete scenarios
+└── README.md                                  # Detailed documentation
+```
+
 ---
 
 ## Principle Details
@@ -157,7 +202,7 @@ Each class should have a single, well-defined responsibility. When a class has m
 
 **Real-World Scenario:** Invoice processing in an e-commerce or billing system
 
-#### ❌ Before (Violation)
+#### Before (Violation)
 
 The `InvoiceProcessor` class has **four different responsibilities**:
 1. **Validation** - Checking if invoice data is valid
@@ -172,7 +217,7 @@ The `InvoiceProcessor` class has **four different responsibilities**:
 - Multiple developers working on different features will cause merge conflicts
 - High risk of introducing bugs when making any change
 
-#### ✅ After (Following SRP)
+#### After (Following SRP)
 
 Each responsibility is separated into its own class:
 - **`InvoiceValidator`** - Only validates invoice data
@@ -191,8 +236,8 @@ Each responsibility is separated into its own class:
 #### Key Takeaway
 
 When you find yourself saying "and" when describing what a class does, it probably violates SRP.
-- ❌ "This class validates **and** calculates **and** saves **and** sends emails"
-- ✅ "This class validates" (single responsibility)
+- "This class validates **and** calculates **and** saves **and** sends emails"
+- "This class validates" (single responsibility)
 
 [SRP Full Documentation](SolidPrinciples/SRP.InvoiceProcessor/README.md)
 
@@ -209,7 +254,7 @@ You should be able to add new functionality without changing existing code. This
 
 **Real-World Scenario:** Payment processing system supporting multiple payment methods (credit cards, PayPal, Stripe, bank transfers, cryptocurrency)
 
-#### ❌ Before (Violation)
+#### Before (Violation)
 
 The `PaymentProcessor` class uses a **switch statement** to handle different payment methods:
 
@@ -231,7 +276,7 @@ switch (request.Method)
 - **Testing Difficulty**: Can't test payment methods independently
 - **Violation of OCP**: The class is not closed for modification
 
-#### ✅ After (Following OCP)
+#### After (Following OCP)
 
 Uses the **Strategy Pattern** with an `IPaymentProcessor` interface:
 
@@ -269,7 +314,7 @@ Use **abstraction** (interfaces) and **composition** (dependency injection) to m
 
 **"Open for extension, closed for modification"** = Add new code, don't change old code.
 
-[OCP Full Documentation →](SolidPrinciples/OCP.PaymentGateway/README.md)
+[OCP Full Documentation](SolidPrinciples/OCP.PaymentGateway/README.md)
 
 ---
 
@@ -284,7 +329,7 @@ Subtypes must be substitutable for their base types. If class B is a subtype of 
 
 **Real-World Scenario:** File storage system supporting various storage backends (local file system, cloud storage, AWS S3, Azure Blob Storage)
 
-#### ❌ Before (Violation)
+#### Before (Violation)
 
 A base `FileStorage` class defines operations like `SaveFile`, `ReadFile`, `DeleteFile`, and `GetFileSize`.
 
@@ -306,7 +351,7 @@ FileStorage storage = new ReadOnlyCloudStorage("path");
 storage.SaveFile("file.txt", data); // BOOM! NotSupportedException
 ```
 
-#### ✅ After (Following LSP)
+#### After (Following LSP)
 
 Uses **interface segregation** to define clear contracts:
 
@@ -342,7 +387,7 @@ storage.ReadFile("file.txt"); // Works perfectly!
 
 The LSP ensures that inheritance hierarchies are logically sound and that polymorphism works correctly.
 
-[LSP Full Documentation →](SolidPrinciples/LSP.FileStorage/README.md)
+[LSP Full Documentation](SolidPrinciples/LSP.FileStorage/README.md)
 
 ---
 
@@ -357,7 +402,7 @@ Many specific interfaces are better than one general-purpose interface. Split la
 
 **Real-World Scenario:** Office device management system for printers, scanners, fax machines, and multifunction devices
 
-#### ❌ Before (Violation)
+#### Before (Violation)
 
 A single `IMultiFunctionDevice` interface defines all possible operations:
 
@@ -385,7 +430,7 @@ public interface IMultiFunctionDevice
 - **Misleading API**: Interface promises functionality that implementations don't have
 - **Hard to Extend**: Adding new device types with different capabilities is awkward
 
-#### ✅ After (Following ISP)
+#### After (Following ISP)
 
 Uses **segregated interfaces** for each capability:
 
@@ -432,7 +477,7 @@ Instead of creating one large interface with everything, create multiple small i
 
 ISP promotes loose coupling, high cohesion, and better API design.
 
-[ISP Full Documentation →](SolidPrinciples/ISP.OfficeDevices/README.md)
+[ISP Full Documentation](SolidPrinciples/ISP.OfficeDevices/README.md)
 
 ---
 
@@ -448,7 +493,7 @@ Instead of having high-level business logic depend on low-level implementation d
 
 **Real-World Scenario:** E-commerce order processing system that saves orders to a database and sends confirmation notifications
 
-#### ❌ Before (Violation)
+#### Before (Violation)
 
 The `OrderService` class directly creates and depends on concrete implementations:
 
@@ -478,7 +523,7 @@ public class OrderService
 2. Recompile
 3. Risk breaking existing functionality
 
-#### ✅ After (Following DIP)
+#### After (Following DIP)
 
 Both high-level and low-level modules depend on **abstractions** (interfaces):
 
@@ -540,7 +585,115 @@ var service3 = new OrderService(new SqlOrderRepository(), new PushNotificationSe
 
 This principle is the cornerstone of **Inversion of Control (IoC)** and **Dependency Injection** patterns used throughout modern software development.
 
-[DIP Full Documentation →](SolidPrinciples/DIP.OrderManagement/README.md)
+[DIP Full Documentation](SolidPrinciples/DIP.OrderManagement/README.md)
+
+---
+
+## SOLID.Combined
+
+**Real-World Scenario:** E-Commerce Order Fulfillment System
+
+While the individual projects demonstrate each SOLID principle in isolation, the **SOLID.Combined** project shows how **all 5 principles work together** in a cohesive, production-ready application.
+
+#### What It Demonstrates
+
+A complete e-commerce order fulfillment system that processes orders from creation through shipment, demonstrating:
+
+**[SRP] Single Responsibility**
+- `OrderValidator` - Only validates
+- `OrderPricingCalculator` - Only calculates pricing
+- Each class has one reason to change
+
+**[OCP] Open/Closed**
+- Extensible discount strategies (`VIPCustomerDiscount`, `BulkOrderDiscount`, `PercentageDiscount`)
+- Extensible shipping providers (`StandardShipping`, `ExpressShipping`, `InternationalShipping`)
+- Extensible payment processors (`CreditCardPayment`, `PayPalPayment`)
+- Add new implementations without modifying existing code
+
+**[LSP] Liskov Substitution**
+- `StandardOrderHandler`, `ExpressOrderHandler`, `InternationalOrderHandler`
+- All fully substitutable for `IOrderHandler` interface
+- Polymorphic behavior works correctly
+
+**[ISP] Interface Segregation**
+- `ICancellableOrder` - Only for orders that can be cancelled
+- `ITrackableOrder` - Only for orders that can be tracked
+- `IRefundableOrder` - Only for orders that can be refunded
+- `IModifiableOrder` - Only for orders that can be modified
+- Orders implement only interfaces for operations they support
+
+**[DIP] Dependency Inversion**
+- `OrderFulfillmentService` depends on abstractions (`IOrderRepository`, `INotificationService`, `IInventoryService`)
+- Easily swap implementations (Email ↔ SMS, SQL ↔ InMemory)
+- Perfect for testing with mocks
+
+#### The Workflow
+
+```csharp
+OrderFulfillmentService
+    ↓
+1. Validate (SRP: OrderValidator)
+    ↓
+2. Check Inventory (DIP: IInventoryService)
+    ↓
+3. Apply Discount (OCP: IDiscountStrategy - pluggable)
+    ↓
+4. Calculate Shipping (OCP: IShippingProvider - pluggable)
+    ↓
+5. Calculate Totals (SRP: OrderPricingCalculator)
+    ↓
+6. Process Payment (OCP: IPaymentProcessor - pluggable)
+    ↓
+7. Prepare Shipment (LSP: IOrderHandler - substitutable)
+    ↓
+8. Save Order (DIP: IOrderRepository)
+    ↓
+9. Send Notifications (DIP: INotificationService)
+    ↓
+10. Order Capabilities (ISP: ICancellableOrder, ITrackableOrder, etc.)
+```
+
+#### Three Complete Scenarios
+
+The program demonstrates **3 end-to-end order processing scenarios**:
+
+1. **Standard Order - VIP Customer**
+   - VIP discount strategy
+   - Standard shipping
+   - Credit card payment
+   - Email notifications
+   - Demonstrates order modification and cancellation (ISP)
+
+2. **Express Order - Bulk Discount**
+   - Bulk order discount (25 items)
+   - Express shipping
+   - PayPal payment
+   - Shows OCP extensibility
+
+3. **International Order**
+   - Percentage discount
+   - International shipping with customs
+   - Credit card payment
+   - **SMS notifications instead of Email** (demonstrates DIP flexibility)
+   - Shows tracking capabilities (ISP)
+
+#### Key Takeaway
+
+**Before SOLID (Typical Problems):**
+- One giant `OrderProcessor` class with 1000+ lines
+- Switch statements everywhere for different order types
+- Can't change payment method without modifying core logic
+- Testing requires real database, real email server, real payment gateway
+- `NotSupportedException` thrown when calling unsupported operations
+
+**After SOLID (This Example):**
+- Small, focused classes (each under 100 lines)
+- New features added by creating new classes, not modifying existing ones
+- Swap implementations at runtime (Email → SMS, SQL → MongoDB)
+- Easy to test with mock implementations
+- Compile-time safety for supported operations
+
+[SOLID.Combined Full Documentation](SolidPrinciples/SOLID.Combined/README.md)
 
 ---
 
