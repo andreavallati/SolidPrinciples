@@ -139,11 +139,10 @@ DIP.OrderManagement/
 ├── Program.cs                                  # Demo application
 └── README.md                                   # Detailed documentation
 ```
-</details>
 
 ---
 
-## Pattern Details
+## Principle Details
 
 Each principle is explained in detail below with real-world scenarios, code examples, and practical insights. Individual README files are also available in each project folder.
 
